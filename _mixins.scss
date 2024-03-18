@@ -1,27 +1,98 @@
-// Mixins
-// --------------------------
-
-@mixin fa-icon() {
-  display: inline-block;
-  font: normal normal normal #{$fa-font-size-base}/1 FontAwesome; // shortening font declaration
-  font-size: inherit; // can't have font-size inherit on line above, so need to override
-  text-rendering: auto; // optimizelegibility throws things off #1094
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transform: translate(0, 0); // ensures no half-pixel rendering in firefox
-
+// WebKit font-smoothing
+// Values: none, antialiased (default), subpixel-antialiased
+@mixin font-smoothing($value: on) {
+    @if $value == on {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    @else {
+        -webkit-font-smoothing: subpixel-antialiased;
+        -moz-osx-font-smoothing: auto;
+    }
 }
 
-@mixin fa-icon-rotate($degrees, $rotation) {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=#{$rotation});
-  -webkit-transform: rotate($degrees);
-      -ms-transform: rotate($degrees);
-          transform: rotate($degrees);
+// Cross-browser mixins transition cubic-bezier
+@mixin bezier-transition($transition-property, $transition-time, $method) {
+    -webkit-transition: $transition-property $transition-time $method;
+    -moz-transition: $transition-property $transition-time $method;
+    -ms-transition: $transition-property $transition-time $method;
+    -o-transition: $transition-property $transition-time $method;
+    transition: $transition-property $transition-time $method;
 }
 
-@mixin fa-icon-flip($horiz, $vert, $rotation) {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=#{$rotation});
-  -webkit-transform: scale($horiz, $vert);
-      -ms-transform: scale($horiz, $vert);
-          transform: scale($horiz, $vert);
+@mixin box-shadow($params) {
+  -webkit-box-shadow: $params;
+     -moz-box-shadow: $params;
+          box-shadow: $params;
+}
+
+// Cross-browser mixins border-radius
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+    border-radius: $radius;
+}
+
+// Cross-browser mixins rotate
+@mixin rotate($rotate) {
+    -ms-transform: rotate($rotate);
+    /* IE 9 */
+    -webkit-transform: rotate($rotate);
+    /* Chrome, Safari, Opera */
+    -moz-transform: rotate($rotate);
+    transform: rotate($rotate);
+}
+
+// Devices Media Queries
+$special-phone: 667px;
+$special-tablet: 1024px;
+
+// General Media Queries
+$phone-width: 480px;
+$tablet-width: 767px;
+$medium-width: 1024px;
+$notebook-width: 1280px;
+$desktop-width: 1600px;
+
+@mixin landscape-phone {
+    @media screen and (max-device-width: $special-phone) and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin landscape-tablet {
+    @media only screen and (max-device-width: $special-tablet) and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin phone {
+    @media only screen and (max-width: $phone-width) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media only screen and (max-width: $tablet-width) {
+        @content;
+    }
+}
+
+@mixin medium {
+    @media only screen and (max-width: $medium-width) {
+        @content;
+    }
+}
+
+@mixin notebook {
+    @media only screen and (max-width: $notebook-width) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media only screen and (max-width: $desktop-width) {
+        @content;
+    }
 }
